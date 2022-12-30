@@ -9,86 +9,44 @@ Original file is located at
 
 import numpy as np
 arr  = []
+
+
 class linear_regression:
+    
   # initialising the hyperparameters
   def __init__(self,learning_rate,no_of_iteration):
+        
     self.learning_rate=learning_rate
     self.no_of_iteration=no_of_iteration
+    
   
   def fit(self,X,Y):
 
     # here m represent no of training values and n is number of independent variables or features
     self.m , self.n = X.shape         #(30,1)
-
     # initialising weight array and bias variable i.e model parameter
     self.w = np.zeros(self.n)
     self.b = 0
     # initialising traning data
     self.X = X
     self.Y = Y
-
     # implementing gradient descent
     for i in range(self.no_of_iteration):
       self.update_weights()
 
   
-  
   def update_weights(self):
 
     Y_prediction = self.predict(self.X)
-
     # calculating gradient
     dw = -(2*(self.X.T).dot(self.Y - Y_prediction))/self.m
     db = -2*np.sum(self.Y - Y_prediction)/self.m
-
     # updating the weight
     self.w = self.w - self.learning_rate*dw
     self.b = self.b - self.learning_rate*db
-    
     arr.append(self.w)
 
   
   def predict(self,X):
     return X.dot(self.w) + self.b
 
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-
-salary_data = pd.read_csv('/content/salary_data.csv')
-salary_data.head()
-
-salary_data.isnull().sum()
-
-salary_data.shape
-
-X = salary_data.iloc[:,:-1].values
-Y = salary_data.iloc[:,1].values
-X.shape
-
-print(Y)
-
-X_train, X_test , Y_train , Y_test = train_test_split(X , Y, test_size=.33, random_state = 2)
-
-model = linear_regression(learning_rate=0.02,no_of_iteration=1000)
-
-
-
-model.fit(X_train,Y_train)
-
-test_data_prediction = model.predict(X_test)
-
-print(test_data_prediction)
-
-plt.scatter(X_test,Y_test,color='red')
-# plt.scatter(X_train,Y_train,color='yellow')
-plt.plot(X_test,test_data_prediction,color='blue')
-plt.xlabel('Work Experience')
-plt.ylabel('Salary')
-
-print(model.w)
-
-var = X_test[0]
-var[0]=30
-print(var[0])
-print(model.predict(var))
